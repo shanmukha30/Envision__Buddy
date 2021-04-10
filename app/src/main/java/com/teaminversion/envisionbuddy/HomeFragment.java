@@ -1,4 +1,4 @@
-package com.example.envision_buddy;
+package com.teaminversion.envisionbuddy;
 
 import android.Manifest;
 import android.content.Context;
@@ -33,7 +33,6 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
-import com.teaminversion.envisionbuddy.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 

@@ -1,4 +1,4 @@
-package com.example.envision_buddy;
+package com.teaminversion.envisionbuddy;
 
 
 import android.content.Context;
@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.teaminversion.envisionbuddy.R;
 
 public class TextFragment extends Fragment {
 

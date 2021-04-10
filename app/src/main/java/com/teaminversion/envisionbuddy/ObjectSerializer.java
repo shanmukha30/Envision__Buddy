@@ -1,4 +1,4 @@
-package com.example.envision_buddy;
+package com.teaminversion.envisionbuddy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,9 +1,8 @@
-package com.example.envision_buddy;
+package com.teaminversion.envisionbuddy;
 
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.teaminversion.envisionbuddy.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;

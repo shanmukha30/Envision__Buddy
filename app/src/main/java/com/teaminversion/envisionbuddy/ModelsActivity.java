@@ -1,4 +1,4 @@
-package com.example.envision_buddy;
+package com.teaminversion.envisionbuddy;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.teaminversion.envisionbuddy.R;
 
 public class ModelsActivity extends AppCompatActivity {
 
@@ -49,4 +48,4 @@ public class ModelsActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-}}
+}

@@ -1,4 +1,4 @@
-package com.example.envision_buddy;
+package com.teaminversion.envisionbuddy;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
