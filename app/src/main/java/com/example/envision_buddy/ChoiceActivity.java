@@ -75,7 +75,7 @@ public class ChoiceActivity extends AppCompatActivity {
         AnalyzeTextTask analyzeTextTask = new AnalyzeTextTask();
         try {
             String urlEncoder = URLEncoder.encode(inputText, "UTF-8");
-            analyzeTextTask.execute("https://e1fd81a3d7d0.ngrok.io/" + urlEncoder);
+            analyzeTextTask.execute(" https://947d0906bc68.ngrok.io/" + urlEncoder);
             progress = new ProgressDialog(this);
             progress.setMessage("Retrieving data");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
