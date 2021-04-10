@@ -56,7 +56,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     HomeFragment.recentList.remove(word);
                 }
                 HomeFragment.recentList.add(word);
-                SharedPreferences sharedPreferences = context.getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.envision_buddy", Context.MODE_PRIVATE);
                 try {
                     sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(HomeFragment.recentList)).apply();
                 } catch (IOException e) {
