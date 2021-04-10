@@ -1,7 +1,9 @@
 package com.example.envision_buddy;
 
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.teaminversion.envisionbuddy.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -45,6 +49,21 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, String> word = arrayList.get(position);
+                if (HomeFragment.recentList.size() > 10){
+                    HomeFragment.recentList.remove(0);
+                }
+                if (HomeFragment.recentList.contains(word)){
+                    HomeFragment.recentList.remove(word);
+                }
+                HomeFragment.recentList.add(word);
+                HomeFragment.mainAdapter.notifyDataSetChanged();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
+                try {
+                    sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(HomeFragment.recentList)).apply();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
                 sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=" + ChoiceActivity.models.get(position).get("url")));
                 sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");

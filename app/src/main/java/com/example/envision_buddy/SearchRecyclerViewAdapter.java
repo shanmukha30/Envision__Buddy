@@ -72,7 +72,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
 
     @Override
     public int getItemCount() {
-       return arrayList.size();
+        return arrayList.size();
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {

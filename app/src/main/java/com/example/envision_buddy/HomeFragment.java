@@ -207,17 +207,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         }
-        /*textView.setText(resultText);
-        continueButton.setEnabled(true);
-        continueButton.setOnClickListener(v -> {*/
-        /*Intent intent = new Intent(getActivity(), ChoiceActivity.class);
-        intent.putExtra("text", resultText);
-        startActivity(intent);*/
-        //});
-        /*NotificationsFragment notificationsFragment = new NotificationsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("text", resultText);
-        notificationsFragment.setArguments(bundle);*/
         Navigation.findNavController(getView()).navigate(R.id.navigation_text);
     }
 

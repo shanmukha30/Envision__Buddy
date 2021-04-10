@@ -1,5 +1,6 @@
 package com.example.envision_buddy;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,16 +22,9 @@ public class TextFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        /*notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);*/
+
         View root = inflater.inflate(R.layout.fragment_text, container, false);
-        /*final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
+
         TextInputLayout inputLayout = root.findViewById(R.id.filledTextField);
         EditText editText = root.findViewById(R.id.editText);
         inputLayout.setError(null);
