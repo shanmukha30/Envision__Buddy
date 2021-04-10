@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.envision_buddy", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
         recentList.clear();
         try {
             recentList = (ArrayList<Map<String, String>>) ObjectSerializer.deserialize(sharedPreferences.getString("recentList", ObjectSerializer.serialize(new ArrayList<Map<String, String>>())));
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 recentList.clear();
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.example.envision_buddy", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
                 try {
                     sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(recentList)).apply();
                 } catch (IOException e) {
@@ -204,5 +204,4 @@ public class HomeFragment extends Fragment {
         }
         Navigation.findNavController(getView()).navigate(R.id.navigation_text);
     }
-
 }

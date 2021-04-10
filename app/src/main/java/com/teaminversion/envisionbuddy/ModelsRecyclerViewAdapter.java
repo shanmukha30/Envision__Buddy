@@ -57,7 +57,7 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
                 }
                 HomeFragment.recentList.add(word);
                 HomeFragment.mainAdapter.notifyDataSetChanged();
-                SharedPreferences sharedPreferences = context.getSharedPreferences("com.example.envision_buddy", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = context.getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
                 try {
                     sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(HomeFragment.recentList)).apply();
                 } catch (IOException e) {
