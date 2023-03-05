@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -123,6 +125,7 @@ public class HomeFragment extends Fragment {
                 File photoFile = null;
                 try {
                     photoFile = createImageFile();
+                    Log.d("ImageFile", "Created");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -132,6 +135,7 @@ public class HomeFragment extends Fragment {
                             .setGuidelines(CropImageView.Guidelines.ON)
                             .setAutoZoomEnabled(true)
                             .start(getContext(), this);
+
                 }
             }
 
@@ -165,12 +169,15 @@ public class HomeFragment extends Fragment {
         try {
             if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
                 //File file = new File(mCurrentPhotoPath);
+                Log.e("ImageReg", "Cropping activity");
                 CropImage.ActivityResult cropResult = CropImage.getActivityResult(data);
                 Uri resultUri = cropResult.getUri();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
                 if (bitmap != null) {
+
                     InputImage image = InputImage.fromBitmap(bitmap, 0);
-                    TextRecognizer recognizer = TextRecognition.getClient();
+                    TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+                    //TextRecognizer recognizer = TextRecognition.getClient();
                     Task<Text> result = recognizer.process(image)
                             .addOnSuccessListener(visionText -> processTextBlock(visionText))
                             .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show());

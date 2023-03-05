@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 public interface API {
 
-    String BASE_URL = "https://console.echoAR.xyz/";
+    String BASE_URL = "https://api.echo3D.co/";
     @GET("search?")
 
     Call<ArrayList<JSONProcessActivity>> getResult(@Query("key") String key, @Query("keywords") String keywords);
