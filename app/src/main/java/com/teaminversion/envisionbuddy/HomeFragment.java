@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -51,6 +52,12 @@ public class HomeFragment extends Fragment {
     static MainRecyclerViewAdapter mainAdapter;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private static final int MY_STORAGE_PERMISSION_CODE = 101;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    /*private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int CROP_IMAGE_REQUEST_CODE = 200;
+    private static final int STORAGE_PERMISSION_CODE = 300;
+    private Uri photoUri;*/
+    private File photoFile;
     static ArrayList<Map<String, String>> recentList = new ArrayList<>();
     static String resultText;
     Button continueButton;
@@ -84,6 +91,12 @@ public class HomeFragment extends Fragment {
             } else {
                 dispatchTakePictureIntent();
             }
+            /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+            } else {
+                dispatchTakePictureIntent();
+            }*/
 
         });
 
@@ -111,6 +124,7 @@ public class HomeFragment extends Fragment {
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         mCurrentPhotoPath = image.getAbsolutePath();
+        Log.d("Image URI",mCurrentPhotoPath);
         return image;
     }
 
@@ -122,7 +136,7 @@ public class HomeFragment extends Fragment {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                File photoFile = null;
+                photoFile = null;
                 try {
                     photoFile = createImageFile();
                     Log.d("ImageFile", "Created");
@@ -133,9 +147,7 @@ public class HomeFragment extends Fragment {
                 if (photoFile != null) {
                     CropImage.activity()
                             .setGuidelines(CropImageView.Guidelines.ON)
-                            .setAutoZoomEnabled(true)
-                            .start(getContext(), this);
-
+                            .start(getContext(),this);
                 }
             }
 
@@ -166,25 +178,38 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("requestCode", String.valueOf(requestCode));
+        Log.d("resultCode", String.valueOf(resultCode));
         try {
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                 //File file = new File(mCurrentPhotoPath);
-                Log.e("ImageReg", "Cropping activity");
+                //Log.e("ImageReg", "Cropping activity");
                 CropImage.ActivityResult cropResult = CropImage.getActivityResult(data);
-                Uri resultUri = cropResult.getUri();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
-                if (bitmap != null) {
-
-                    InputImage image = InputImage.fromBitmap(bitmap, 0);
-                    TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
-                    //TextRecognizer recognizer = TextRecognition.getClient();
-                    Task<Text> result = recognizer.process(image)
-                            .addOnSuccessListener(visionText -> processTextBlock(visionText))
-                            .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show());
+                if (resultCode == getActivity().RESULT_OK) {
+                    Uri resultUri = cropResult.getUri();
+                    Log.d("CropResult URI", String.valueOf(resultUri));
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (bitmap != null) {
+                        InputImage image = InputImage.fromBitmap(bitmap, 0);
+                        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+                        //TextRecognizer recognizer = TextRecognition.getClient();
+                        Task<Text> result = recognizer.process(image)
+                                .addOnSuccessListener(visionText -> processTextBlock(visionText))
+                                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show());
+                    }
+                } else {
+                    Log.d("CropResult", "resultCode is not RESULT_OK");
+                    //Toast.makeText(getActivity(), "Crop failed: " + cropResult.getError(), Toast.LENGTH_SHORT).show();
                 }
-            }
 
-        } catch (Exception error) {
+            }
+        } catch (Exception error)
+        {
             error.printStackTrace();
         }
     }
@@ -211,4 +236,7 @@ public class HomeFragment extends Fragment {
         }
         Navigation.findNavController(getView()).navigate(R.id.navigation_text);
     }
+
+
+
 }

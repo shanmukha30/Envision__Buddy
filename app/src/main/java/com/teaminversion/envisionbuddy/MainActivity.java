@@ -31,30 +31,38 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
-        if(!Environment.isExternalStorageManager())
-        {
-            requestPermissions();
-        }
+        requestPermissions();
+
 
     }
-
     private void requestPermissions() {
         // below line is use to request permission in the current activity.
         // this method is use to handle error in runtime permissions
         Dexter.withActivity(this)
-                .withPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         // this method is called when all permissions are granted
-                        if (multiplePermissionsReport.areAllPermissionsGranted())
-                        {
+                        if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             // do you work now
-                            if(!Environment.isExternalStorageManager())
+                            Toast.makeText(MainActivity.this, "All the permissions are granted..", Toast.LENGTH_SHORT).show();
+                            if(Environment.isExternalStorageManager())
+                            {
+                               /* internal = new File("/sdcard");
+                                internalContents = internal.listFiles();*/
+                            }
+                            else
                             {
                                 Intent permissionIntent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                                 startActivity(permissionIntent);
                             }
+                        }
+                        // check for permanent denial of any permission
+                        if (multiplePermissionsReport.isAnyPermissionPermanentlyDenied()) {
+                            // permission is denied permanently, we will show user a dialog message.
+                            //showSettingsDialog();
+                            int a =0;
                         }
                     }
                     @Override

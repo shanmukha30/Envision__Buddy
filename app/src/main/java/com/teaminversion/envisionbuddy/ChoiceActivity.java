@@ -74,7 +74,7 @@ public class ChoiceActivity extends AppCompatActivity {
         AnalyzeTextTask analyzeTextTask = new AnalyzeTextTask();
         try {
             String urlEncoder = URLEncoder.encode(inputText, "UTF-8");
-            analyzeTextTask.execute("https://46b2-190-2-132-214.ngrok.io/" + urlEncoder);
+            analyzeTextTask.execute("https://01a2-223-187-117-96.ngrok.io/" + urlEncoder);
             progress = new ProgressDialog(this);
             progress.setMessage("Retrieving data");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -123,14 +123,15 @@ public class ChoiceActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.i("JSONArray", s);
+
             try {
+                Log.i("JSONArray", s);
                 JSONArray jsonArray = new JSONArray(s);
                 for (int i=0; i<jsonArray.length(); i++){
                     Log.i("infomact", (String) jsonArray.get(i));
                     choiceList.add((String) jsonArray.get(i));
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             progress.dismiss();
