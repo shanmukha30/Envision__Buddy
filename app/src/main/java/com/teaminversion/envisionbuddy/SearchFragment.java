@@ -64,7 +64,7 @@ public class SearchFragment extends Fragment {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 API myApi = retrofit.create(API.class);
-                Call<ArrayList<JSONProcessActivity>> call = myApi.getResult("tiny-tooth-0552", word);
+                Call<ArrayList<JSONProcessActivity>> call = myApi.getResult("448afed57b9e4872b52b72e53c5ad9bf", word);
                 call.enqueue(new Callback<ArrayList<JSONProcessActivity>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JSONProcessActivity>> call, Response<ArrayList<JSONProcessActivity>> response) {
