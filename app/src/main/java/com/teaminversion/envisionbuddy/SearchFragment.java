@@ -3,6 +3,7 @@ package com.teaminversion.envisionbuddy;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -60,21 +62,25 @@ public class SearchFragment extends Fragment {
                 searchList.clear();
                 String word = searchText.getText().toString();
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(API.BASE_URL)
+                        .baseUrl("https://api.sketchfab.com/v3/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                API myApi = retrofit.create(API.class);
-                Call<ArrayList<JSONProcessActivity>> call = myApi.getResult("448afed57b9e4872b52b72e53c5ad9bf", word);
-                call.enqueue(new Callback<ArrayList<JSONProcessActivity>>() {
+                API api = retrofit.create(API.class);
+                Call<com.teaminversion.envisionbuddy.Response> call = api.searchModels("models",word);
+                call.enqueue(new Callback<com.teaminversion.envisionbuddy.Response>() {
                     @Override
-                    public void onResponse(Call<ArrayList<JSONProcessActivity>> call, Response<ArrayList<JSONProcessActivity>> response) {
-                        ArrayList<JSONProcessActivity> searchResults = response.body();
-                        for (int i = 0; i < searchResults.size(); i++) {
-                            if (searchResults.get(i).getSource().equals("Poly")) {
+                    public void onResponse(Call<com.teaminversion.envisionbuddy.Response> call, Response<com.teaminversion.envisionbuddy.Response> response) {
+                        Log.d("API Response: ", "got api response");
+                        List<ResultsItem> models = response.body().getResults();
+                        for (ResultsItem model : models) {
+                            if (model != null) {
+                                Log.d("Model Name", model.getName());
+                                Log.d("Model UID", model.getUid());
+                                Log.d("Model EmbedURL", model.getEmbedUrl());
                                 Map<String, String> modelInfo = new HashMap<>();
-                                modelInfo.put("name", searchResults.get(i).getName());
-                                modelInfo.put("thumbnail", searchResults.get(i).getThumbnail());
-                                modelInfo.put("url", searchResults.get(i).getGltfUrl());
+                                modelInfo.put("name", model.getName());
+                                modelInfo.put("thumbnail", model.getThumbnails().getImages().get(0).getUrl());
+                                modelInfo.put("url", model.getEmbedUrl());
                                 searchList.add(modelInfo);
                             }
                         }
@@ -88,7 +94,7 @@ public class SearchFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<ArrayList<JSONProcessActivity>> call, Throwable t) {
+                    public void onFailure(Call<com.teaminversion.envisionbuddy.Response> call, Throwable t) {
                         inputLayout.setError("Couldn't fetch data");
                     }
                 });

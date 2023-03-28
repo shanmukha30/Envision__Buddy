@@ -3,7 +3,89 @@ package com.teaminversion.envisionbuddy;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class JSONProcessActivity {
+    private String uid;
+    private String name;
+    private String description;
+    private Thumbnails thumbnails;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Thumbnails getThumbnails() {
+        return thumbnails;
+    }
+
+    public static class Thumbnails {
+        private String[] images;
+
+        public String[] getImages() {
+            return images;
+        }
+    }
+}
+
+
+/*public class JSONProcessActivity {
+    private int id;
+    private String name;
+    private String description;
+    private String url;
+    private String thumbnailUrl;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+}*/
+
+/*public class JSONProcessActivity {
 
     @SerializedName("source")
     @Expose
@@ -115,4 +197,4 @@ public class JSONProcessActivity {
     public void setPngUrl(String pngUrl) {
         this.pngUrl = pngUrl;
     }
-}
+}*/

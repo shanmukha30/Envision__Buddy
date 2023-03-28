@@ -46,7 +46,7 @@ public class ChoiceActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String text = intent.getStringExtra("text");
         boolean status = intent.getBooleanExtra("status", false);
-        choiceList.clear();
+        //choiceList.clear();
         if (!status) {
             analyzeText(text);
         }
@@ -71,10 +71,11 @@ public class ChoiceActivity extends AppCompatActivity {
 
     private void analyzeText(String inputText){
         //Sample choices
+        choiceList.clear();
         AnalyzeTextTask analyzeTextTask = new AnalyzeTextTask();
         try {
             String urlEncoder = URLEncoder.encode(inputText, "UTF-8");
-            analyzeTextTask.execute("https://968c-136-233-9-97.ngrok.io/" + urlEncoder);
+            analyzeTextTask.execute("https://e4e0-136-233-9-97.ngrok.io/" + urlEncoder);
             progress = new ProgressDialog(this);
             progress.setMessage("Retrieving data");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);

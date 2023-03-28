@@ -40,9 +40,16 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         holder.nameTextView.setText(arrayList.get(position).get("name"));
-        Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
+        /*Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
+                .into(holder.modelImageView);*/
+        Picasso.with(context)
+                .load(arrayList.get(position).get("thumbnail"))
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error_placeholder)
+                .resize(500, 450) // set constant width and height
+                .centerCrop() // crop image to fit the ImageView
                 .into(holder.modelImageView);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +68,14 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+                /*Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
                 sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=" + arrayList.get(position).get("url")));
                 sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
-                context.startActivity(sceneViewerIntent);
+                context.startActivity(sceneViewerIntent);*/
+                String modelEmbedUrl = arrayList.get(position).get("url");
+                Uri modelUri = Uri.parse(modelEmbedUrl);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, modelUri);
+                context.startActivity(browserIntent);
             }
         });
     }

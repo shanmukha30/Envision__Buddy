@@ -41,9 +41,16 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         holder.recentTextView.setText(arrayList.get(position).get("name"));
-        Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
+        /*Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
+                .into(holder.mainImageView);*/
+        Picasso.with(context)
+                .load(arrayList.get(position).get("thumbnail"))
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error_placeholder)
+                .resize(500, 450) // set constant width and height
+                .centerCrop() // crop image to fit the ImageView
                 .into(holder.mainImageView);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,10 +66,14 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
                     e.printStackTrace();
                 }
                 notifyDataSetChanged();
-                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+                /*Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
                 sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=" + word.get("url")));
                 sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
-                context.startActivity(sceneViewerIntent);
+                context.startActivity(sceneViewerIntent);*/
+                String modelEmbedUrl = word.get("url");
+                Uri modelUri = Uri.parse(modelEmbedUrl);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, modelUri);
+                context.startActivity(browserIntent);
             }
         });
     }

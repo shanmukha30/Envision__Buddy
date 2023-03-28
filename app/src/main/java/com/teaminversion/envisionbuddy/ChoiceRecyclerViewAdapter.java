@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +24,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecyclerViewAdapter.RecyclerViewHolder> {
 
@@ -55,25 +63,58 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
                 progress.setCancelable(false);
                 progress.show();
                 ChoiceActivity.models.clear();
+
+                /*String token = "448afed57b9e4872b52b72e53c5ad9bf";
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(API.BASE_URL)
+                        .baseUrl("https://api.sketchfab.com")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(new OkHttpClient.Builder()
+                                .addInterceptor(chain -> {
+                                    Request original = chain.request();
+                                    Request request = original.newBuilder()
+                                            .header("Authorization", token)
+                                            .method(original.method(), original.body())
+                                            .build();
+                                    return chain.proceed(request);
+                                }).build())
+                        .build();*/
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://api.sketchfab.com/v3/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                API myApi = retrofit.create(API.class);
-                Call<ArrayList<JSONProcessActivity>> call = myApi.getResult("old-smoke-4544", word);
-                call.enqueue(new Callback<ArrayList<JSONProcessActivity>>() {
+                API api = retrofit.create(API.class);
+                Call<com.teaminversion.envisionbuddy.Response> call = api.searchModels("models",word);
+                call.enqueue(new Callback<com.teaminversion.envisionbuddy.Response>() {
                     @Override
-                    public void onResponse(Call<ArrayList<JSONProcessActivity>> call, Response<ArrayList<JSONProcessActivity>> response) {
-                        ArrayList<JSONProcessActivity> searchResults = response.body();
-                        for (int i=0; i<searchResults.size(); i++){
-                            if (searchResults.get(i).getSource().equals("Poly")) {
+                    public void onResponse(Call<com.teaminversion.envisionbuddy.Response> call, Response<com.teaminversion.envisionbuddy.Response> response) {
+                            Log.d("API Response: ", "got api response");
+                            List<ResultsItem> models = response.body().getResults();
+                            for (ResultsItem model : models) {
+                                if (model != null) {
+                                    Log.d("Model Name", model.getName());
+                                    Log.d("Model UID", model.getUid());
+                                    Log.d("Model EmbedURL", model.getEmbedUrl());
+                                    Map<String, String> modelInfo = new HashMap<>();
+                                    modelInfo.put("name", model.getName());
+                                    modelInfo.put("thumbnail", model.getThumbnails().getImages().get(0).getUrl());
+                                    modelInfo.put("url", model.getEmbedUrl());
+                                    ChoiceActivity.models.add(modelInfo);
+                                }
+                            }
+
+
+                        /*for (int i=0; i<searchResults.size(); i++){
+                            Log.d("model info",searchResults.get(i).getDescription());
+                            Log.d("model info",searchResults.get(i).getName();
+                            Log.d("model info",searchResults.get(i).getUrl());
+                            if (response!=null) {
                                 Map<String, String> modelInfo = new HashMap<>();
                                 modelInfo.put("name", searchResults.get(i).getName());
-                                modelInfo.put("thumbnail", searchResults.get(i).getThumbnail());
-                                modelInfo.put("url", searchResults.get(i).getGltfUrl());
+                                modelInfo.put("thumbnail", searchResults.get(i).getThumbnailUrl());
+                                modelInfo.put("url", searchResults.get(i).getUrl());
                                 ChoiceActivity.models.add(modelInfo);
                             }
-                        }
+                        }*/
 
                         progress.dismiss();
                         if (!ChoiceActivity.models.isEmpty()) {
@@ -85,7 +126,7 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
                     }
 
                     @Override
-                    public void onFailure(Call<ArrayList<JSONProcessActivity>> call, Throwable t) {
+                    public void onFailure(Call<com.teaminversion.envisionbuddy.Response> call, Throwable t) {
                         progress.dismiss();
                         Snackbar snackbar = Snackbar.make(v, "Couldn't fetch data", Snackbar.LENGTH_LONG);
                         snackbar.show();
